@@ -1,0 +1,2 @@
+---
+swapfile: "{{swapfile_Dir}}{% if swapfile_Dir != '/' %}/{% endif %}{{swapfile_Name}}"

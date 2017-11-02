@@ -1,0 +1,42 @@
+---
+- name: Creating swap space
+  become: True
+  become_user: root
+  command: dd if=/dev/zero of={{ swapfile }} bs=1M count={{ swapsize_MB }}
+  register: swap_file_created
+  args:
+    creates: '{{ swapfile }}'
+
+- name: Change swap file permissions
+  become: true
+  become_user: root
+  file:
+    path: '{{ swapfile }}'
+    mode: 0600
+
+- name: Make swap
+  become: true
+  become_user: root
+  command: mkswap {{ swapfile }}
+  register: swap_made
+  when: swap_file_created | changed
+
+- name: Enable Swap
+  become: true
+  command: swapon {{ swapfile }}
+  when: swap_made | changed
+
+- name: Add swap file to /etc/fstab
+  become: yes
+  lineinfile:
+    dest: /etc/fstab
+    line: "{{ swapfile }} none swap sw 0 0"
+    state: present
+
+- name: Set swapiness
+  become: true
+  become_user: root
+  sysctl:
+    name: vm.swappiness
+    value: '{{ swap_swappiness }}'
+    sysctl_set: yes

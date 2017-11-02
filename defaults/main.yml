@@ -1,0 +1,5 @@
+---
+swapfile_Dir: /
+swapfile_Name: swapfile
+swapsize_MB: 1024
+swap_swappiness: 30

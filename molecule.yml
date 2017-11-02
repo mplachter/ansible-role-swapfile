@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+docker:
+  containers:
+    - name: ansible-role-swapfile-centos7
+      image: mplachter/docker-centos7-molecule
+      image_version: latest
+      privileged: True
+      cap_add:
+        - SYS_ADMIN
+      volume:
+        - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      ansible_groups:
+        - group
+    - name: ansible-role-swapfile-centos6
+      image: mplachter/docker-centos6-molecule
+      image_version: latest
+      privileged: True
+      cap_add:
+        - SYS_ADMIN
+      volume:
+        - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      ansible_groups:
+        - group
+verifier:
+  name: testinfra
